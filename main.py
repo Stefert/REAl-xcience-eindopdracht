@@ -1,11 +1,12 @@
 import re 
 import random
+import time
 
 # Dictionary voor patronen.
 patterns = { 
   "Do you remember (.*)":"Of course I remember {}", 
   "I feel (.*)":"Why do you feel {}?" ,
-  "I need (.*)":"Why do you need {}"
+  "I need (.*)":"Why do you need {}, can i help you?"
 }
 
 # Dictionary voor veelvoorkomende berichten.
@@ -15,9 +16,12 @@ responses = {
   "how about you": ["im  fine, thanks!", "im okay, thanks for asking"],
   "i feel sad" : ["im sorry to hear that, how can i assist you?" , "if you feel down you can always seek help from profesionals"],
   "i need help" : ["how can i help you" , "okay, what can i do for you?"],
-  "i feel great" : ["Wel thats amazing to hear!", "thats great!"],
-}
+  "i feel great" : ["Wel thats ama zing to hear!", "thats great!"],
+  "i feel happy" : ["Wel thats great to hear!", "thats wonderful!"],
+  "no" : ["oh ok, let me know if i can assist you", "ok"],
+  "yes" : ["what can i do for you", "how can i help you"]
 
+} 
 # Functie die het antwoord van de chatbot teruggeeft.
 # Dit antwoord komt uit de patterns dictionary,
 # de responses dictionary,
@@ -43,6 +47,7 @@ def get_response(message):
 while True:
   message = input("YOU: ")
   response = get_response(message)
+  time.sleep(random.randint(1,2))
   print("Bot: " + response)
 
 
