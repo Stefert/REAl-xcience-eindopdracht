@@ -4,14 +4,29 @@ import time
 import json
 import urllib.request
 
-# Dictionary voor patronen.
+
+
+# functie voor het formuleren van de uitkomst van de API.
+def getjokes():
+  url = 'https://official-joke-api.appspot.com/jokes/random'
+  response = urllib.request.urlopen(url)
+  result = json.loads(response.read())
+  space = (" :                               ")
+  setup = result['setup']
+  punchline = result['punchline']
+  joke = setup + space + punchline
+  return joke
+
+# Patroon-Dictionary
 patterns = { 
-  "Do you remember (.*)":"Of course I remember {}", 
+  "Do you remember (.*)":"Of course I remember {}.", 
   "I feel (.*)":"Why do you feel {}?" ,
-  "I need (.*)": "you need {}, can i help you?",
-  "I dont feel (.*)" : "im sorry to hear that you dont feel {}, how can i help you?",
+  "I need (.*)": "You need {}., can i help you?",
+  "I dont feel (.*)" : "Im sorry to hear that you dont feel {}., What is wrong?",
+  "Because im (.*)" : "Oh i get it now, it is because you are {}.",
+  "Can you (.*)"  : "Of course i can {}."
 }
-  # Dictionary voor veelvoorkomende berichten.
+  # Responses-Dictionary.
 responses = {
   "hello": ["Hi, how are you?", "Hello!, how are you?"],
   "i am fine": ["Good to hear!", "Awesome!"],
@@ -22,35 +37,29 @@ responses = {
   "i feel happy" : ["Wel thats great to hear!", "thats wonderful!"],
   "no" : ["oh ok, let me know if i can assist you", "ok"],
   "yes" : ["what can i do for you", "how can i help you"],
+  "tell me a joke": [getjokes()],
+  "how are you" : ["I am fine, how about you", "i'm okay, how are you?"]
 
 
 } 
 # Functie die het antwoord van de chatbot teruggeeft.
-# Dit antwoord komt uit de patterns dictionary,
-# de responses dictionary,
-# of het is een standaardantwoord.
 def get_response(message):
-  # Zoek een antwoord in de 'patterns' dictionary
-  # en return dit antwoord als het is gevonden.
   for pattern in patterns: 
     match = re.search(pattern,message) 
     if match:
-      # hint: patterns[pattern].xxx( ... ) waar xxx een python-functie is.
-      # hint: lees hoofdstuk 4.2
       return patterns[pattern].format(match.group(1))
-  # Zoek een antwoord in de 'responses' dictionary
-  # en return dit antwoord als het is gevonden.
-  # Als het niet is gevonden, dan zegt de bot jou na.
   if message in responses:
-    # hint: lees hoofdstuk 2.2 en hoofdstuk 3.3
     return random.choice(responses[message])
   else:
-    return "i heard you, you said: " + message 
+    return "i heard you, you said: " + message + ", but i didn't quite understand you." 
 
+#zorgt ervoor dat de responses juist aankomen
 while True:
   message = input("YOU: ")
   response = get_response(message)
-  time.sleep(random.randint(1,2)) #laat de chatbot wachten voordat hij praat
+ 
+  #laat de chatbot wachten voordat hij praat en voert de response uit
+  time.sleep(random.randint(1,2))
   print("Bot: " + response)
 
 
